@@ -6,6 +6,7 @@ export const login = (req: Request, res: Response) => {
 };
 
 export const generateCode = (req: Request, res: Response) => {
-  console.log('generate code');
+  const { email } = req.params;
+  console.log(email);
   res.send('Generate code');
 };
