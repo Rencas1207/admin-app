@@ -10,5 +10,6 @@
   2.  "build": "tsc"
 - Install: `npm i express dotenv`
 - Install: `npm i @types/express ts-node nodemon -D`
+- Install: `npm i mongoose`
 
 ### Front: React (Next) - ChakraUI - Zustand - React Query - React Hook Form

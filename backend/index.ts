@@ -1,8 +1,10 @@
 import express from 'express';
 import 'dotenv/config';
 import routes from './routes';
+import connectDB from './db/connect';
 
 const app = express();
+connectDB();
 
 app.use('/api', routes);
 
