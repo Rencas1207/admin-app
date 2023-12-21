@@ -13,3 +13,6 @@
 - Install: `npm i mongoose`
 
 ### Front: React (Next) - ChakraUI - Zustand - React Query - React Hook Form
+
+- Install: `npm create t3-app@latest`
+- Install: `npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion`
