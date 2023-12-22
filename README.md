@@ -15,6 +15,8 @@
 - Install: `npm i @types/cors -D`
 - Install: `npm i nodemailer`
 - Install: `npm i @types/nodemailer -D`
+- Install: `npm i cookie-parser`
+- Install: `npm i @types/cookie-parser -D`
 
 ### Front: React (Next) - ChakraUI - Zustand - React Query - React Hook Form
 
