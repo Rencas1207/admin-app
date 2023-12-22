@@ -12,6 +12,7 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ ok: false, message: 'Código incorrecto' });
   }
 
+  res.cookie('jwt', 'mitoken');
   res.status(200).json({ ok: true, message: 'Inicio de sesión exitoso' });
 };
 

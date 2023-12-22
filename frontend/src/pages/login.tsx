@@ -16,7 +16,11 @@ type FieldValues = z.infer<typeof schema> // infiere del schema
 
 const Login: NextPage = () => {
    const { register, getValues, handleSubmit, formState: {errors} } = useForm<FieldValues>({
-      resolver: zodResolver(schema)
+      resolver: zodResolver(schema),
+      defaultValues: {
+         email: 'rencasdag.12@gmail.com',
+         code: '049118'
+      }
    });
    const router = useRouter();
 
@@ -25,7 +29,8 @@ const Login: NextPage = () => {
       console.log({email, code});
       axios
          .post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`, 
-         { code }
+         { code },
+         {withCredentials: true}
          )
          .then(() => {
             router.push('/');
