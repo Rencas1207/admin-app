@@ -7,6 +7,7 @@ import connectDB from './db/connect';
 const app = express();
 connectDB();
 
+app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use('/api', routes);
 
