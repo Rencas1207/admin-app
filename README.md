@@ -13,6 +13,8 @@
 - Install: `npm i mongoose`
 - Install: `npm i cors`
 - Install: `npm i @types/cors -D`
+- Install: `npm i nodemailer`
+- Install: `npm i @types/nodemailer -D`
 
 ### Front: React (Next) - ChakraUI - Zustand - React Query - React Hook Form
 
