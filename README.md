@@ -22,3 +22,4 @@
 - Install: `npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion`
 - Install: `npm i react-hook-form`
 - Install: `npm i axios`
+- Install: `npm i @hookform/resolvers`
