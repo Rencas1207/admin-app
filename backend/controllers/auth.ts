@@ -2,10 +2,17 @@ import { Request, Response } from 'express';
 import sendEmail from '../helpers/mailer';
 import UserModel from '../models/user';
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   const { email } = req.params;
   const { code } = req.body;
-  res.send('Login');
+
+  const user = await UserModel.findOne({ email, login_code: code });
+
+  if (!user) {
+    return res.status(400).json({ ok: false, message: 'Código incorrecto' });
+  }
+
+  res.status(200).json({ ok: true, message: 'Inicio de sesión exitoso' });
 };
 
 export const generateCode = async (req: Request, res: Response) => {
@@ -29,8 +36,8 @@ export const generateCode = async (req: Request, res: Response) => {
 
   sendEmail({
     to: email,
-    subject: 'esto es tu codigo',
-    html: 'codigo para ingresar: ',
+    subject: 'esto es tu codigo' + user.login_code,
+    html: `codigo para ingresar: ${user.login_code}`,
   });
   res.send('Generate code');
 };
