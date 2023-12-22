@@ -36,8 +36,8 @@ export const generateCode = async (req: Request, res: Response) => {
 
   sendEmail({
     to: email,
-    subject: 'esto es tu codigo' + user.login_code,
-    html: `codigo para ingresar: ${user.login_code}`,
+    subject: `Hola 😀, este es tú código para ingresar ${user.login_code}`,
+    html: `Código: ${user.login_code}`,
   });
   res.send('Generate code');
 };
