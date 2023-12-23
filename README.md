@@ -17,6 +17,8 @@
 - Install: `npm i @types/nodemailer -D`
 - Install: `npm i cookie-parser`
 - Install: `npm i @types/cookie-parser -D`
+- Install: `npm i jsonwebtoken`
+- Install: `npm i @types/jsonwebtoken -D`
 
 ### Front: React (Next) - ChakraUI - Zustand - React Query - React Hook Form
 
