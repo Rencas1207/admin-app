@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import sendEmail from '../helpers/mailer';
 import UserModel from '../models/user';
+import jwt from 'jsonwebtoken';
 
 export const login = async (req: Request, res: Response) => {
   const { email } = req.params;
@@ -12,7 +13,17 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ ok: false, message: 'Código incorrecto' });
   }
 
-  res.cookie('jwt', 'mitoken');
+  const token = jwt.sign(
+    {
+      sub: user._id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      roles: user.roles,
+    },
+    process.env.JWT_SECRET_KEY as string
+  );
+
+  res.cookie('jwt', token);
   res.status(200).json({ ok: true, message: 'Inicio de sesión exitoso' });
 };
 
