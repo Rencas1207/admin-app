@@ -19,14 +19,14 @@ const Login: NextPage = () => {
       resolver: zodResolver(schema),
       defaultValues: {
          email: 'rencasdag.12@gmail.com',
-         code: '049118'
+         code: '042023'
       }
    });
    const router = useRouter();
 
    const onSubmit = () => {
       const {email, code} = getValues();
-      console.log({email, code});
+
       axios
          .post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`, 
          { code },
