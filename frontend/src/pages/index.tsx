@@ -25,11 +25,12 @@ export default function Home() {
               Iniciar sesión
             </Button>
             <Button colorScheme='green' onClick={() => {
-              axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
-                withCredentials: true
-              })
+              // axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
+              //   withCredentials: true
+              // })
+              router.push('/clients/new')
             }}>
-              Get Sales
+              Nuevo cliente
             </Button> 
             <Button colorScheme='purple' onClick={() => {
               axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {

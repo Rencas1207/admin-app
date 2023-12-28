@@ -27,3 +27,4 @@
 - Install: `npm i react-hook-form`
 - Install: `npm i axios`
 - Install: `npm i @hookform/resolvers`
+- Install: `npm i -D @hookform/devtools`
