@@ -1,10 +1,12 @@
-import { Button, Card, Container, FormControl, FormErrorMessage, FormLabel, Heading, Input } from '@chakra-ui/react'
+import { Button, Card, Container, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Select } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form'
 import { DevTool } from "@hookform/devtools";
 import React from 'react'
+import axios from 'axios';
+import { env } from '~/env';
 
 const NewClient: NextPage = () => {
 
@@ -24,11 +26,19 @@ const NewClient: NextPage = () => {
       resolver: zodResolver(schema),
    });
 
+   const onSubmit = async (data: FieldValues) => {
+      const response = await axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients`, 
+         data, 
+         {withCredentials: true}
+      )
+      console.log(response);
+   }
+
   return (
     <Container marginTop={8}>
       <Card padding={4}>
          <Heading textAlign="center" marginBottom={6}>Nuevo cliente</Heading>
-         <form>
+         <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.firstname} marginBottom={5}>
                <FormLabel>Nombre</FormLabel>
                <Input type='text' placeholder='Ingresa tu nombre' {...register('firstname')} />
@@ -44,6 +54,25 @@ const NewClient: NextPage = () => {
                <Input type='text' placeholder='Ingresa tu email' {...register('email')} />
                <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
+            <Flex gap={3}>
+               <FormControl flex={8} isInvalid={!!errors.document_type} marginBottom={5}>
+                  <FormLabel>Tipo de documento</FormLabel>
+                  <Select placeholder='Seleccionar' {...register('document_type')} >
+                     {
+                        DOC_TYPES.map(dt => (
+                           <option key={dt} value={dt}>
+                              {dt}
+                           </option>
+                        ))
+                     }
+                  </Select>
+               </FormControl>
+               <FormControl flex={5} isInvalid={!!errors.document_value} marginBottom={5}>
+                  <FormLabel>Documento</FormLabel>
+                  <Input type='text' placeholder='Documento' {...register('document_value')} />
+                  <FormErrorMessage>{errors.document_value?.message}</FormErrorMessage>
+               </FormControl>
+            </Flex>
             <Button colorScheme='purple' type='submit'>
                Crear
             </Button>
