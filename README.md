@@ -28,3 +28,4 @@
 - Install: `npm i axios`
 - Install: `npm i @hookform/resolvers`
 - Install: `npm i -D @hookform/devtools`
+- Install: `npm i @tanstack/react-query`

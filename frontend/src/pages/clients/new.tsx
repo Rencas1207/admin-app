@@ -7,31 +7,35 @@ import { DevTool } from "@hookform/devtools";
 import React from 'react'
 import axios from 'axios';
 import { env } from '~/env';
+import { useRouter } from 'next/router';
+
+const DOC_TYPES = ["RUC", "Cédula", "Pasaporte", "Identificación Exterior"] as const;
+
+const schema = z.object({
+   firstname: z.string().min(3),
+   lastname: z.string().min(3),
+   email: z.string().email('Email inválido'),
+   document_type: z.enum(DOC_TYPES),
+   document_value: z.string().min(4),
+})
+
+export type Client = z.infer<typeof schema>
 
 const NewClient: NextPage = () => {
 
-   const DOC_TYPES = ["RUC", "Cédula", "Pasaporte", "Identificación Exterior"] as const;
+   const router = useRouter();
 
-   const schema = z.object({
-      firstname: z.string().min(3),
-      lastname: z.string().min(3),
-      email: z.string().email('Email inválido'),
-      document_type: z.enum(DOC_TYPES),
-      document_value: z.string().min(4),
-   })
-
-   type FieldValues = z.infer<typeof schema>
-
-   const { register, getValues, handleSubmit, control, formState: {errors} } = useForm<FieldValues>({
+   const { register, getValues, handleSubmit, control, reset, formState: {errors} } = useForm<Client>({
       resolver: zodResolver(schema),
    });
 
-   const onSubmit = async (data: FieldValues) => {
-      const response = await axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients`, 
+   const onSubmit = async (data: Client) => {
+      await axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients`, 
          data, 
          {withCredentials: true}
       )
-      console.log(response);
+      reset();
+      router.push('/clients')
    }
 
   return (

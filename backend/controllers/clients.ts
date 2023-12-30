@@ -3,7 +3,8 @@ import ClientModel from '../models/client';
 
 export const getAll = async (req: any, res: Response) => {
   try {
-    const clients = await ClientModel.find({ user: req.user.sub });
+    const clients = await ClientModel.find();
+    console.log(clients);
     res.status(200).json({ ok: true, data: clients });
   } catch (error) {
     res.status(500).json({ ok: false, message: 'Error del servidor' });
