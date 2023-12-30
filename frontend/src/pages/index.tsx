@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { env } from "~/env";
-import { Button, ButtonGroup, Container, Heading } from '@chakra-ui/react'
+import { Button, ButtonGroup, Card, Container, Heading } from '@chakra-ui/react'
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -15,35 +15,32 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container marginTop={8}>
+        <Card p={4}>
           <Heading>
             Mis ventas
           </Heading>
-          <ButtonGroup>
+          <ButtonGroup mt={8}>
             <Button colorScheme='blue' onClick={() => {
               router.push('/login')
             }}>
               Iniciar sesión
             </Button>
-            <Button colorScheme='green' onClick={() => {
-              // axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
-              //   withCredentials: true
-              // })
-              router.push('/clients/new')
-            }}>
-              Nuevo cliente
-            </Button> 
             <Button colorScheme='purple' onClick={() => {
-              axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
-                operation_data: new Date(),
-                total_amount: 25000,
-              }, {
-                withCredentials: true
-              })
+              router.push('/clients')
             }}>
-              Create Sales
+              Clientes
             </Button> 
           </ButtonGroup>
+        </Card>
+         
       </Container>
     </>
   );
 }
+
+// axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
+//                 operation_data: new Date(),
+//                 total_amount: 25000,
+//               }, {
+//                 withCredentials: true
+//               })
