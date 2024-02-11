@@ -15,16 +15,21 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container marginTop={8}>
+        <Button mb={4} colorScheme='blue' onClick={() => {
+          router.push('/login')
+        }}>
+          Iniciar sesión
+        </Button>
         <Card p={4}>
           <Heading>
             Mis ventas
           </Heading>
           <ButtonGroup mt={8}>
-            <Button colorScheme='blue' onClick={() => {
-              router.push('/login')
+            <Button colorScheme='purple' onClick={() => {
+              router.push('/sales/new')
             }}>
-              Iniciar sesión
-            </Button>
+              Nueva venta
+            </Button> 
             <Button colorScheme='purple' onClick={() => {
               router.push('/clients')
             }}>
