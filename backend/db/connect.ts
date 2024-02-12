@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import SaleModel from '../models/sale';
+import ProductModel from '../models/product';
 
 async function connectDB() {
   if (!process.env.MONGODB_URL) {
@@ -9,10 +10,10 @@ async function connectDB() {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
     console.log('Conexion exitosa con mongodb');
-    // await SaleModel.create({
-    //   operation_date: new Date(),
-    //   user: '6583a6dff60349682f93f823',
-    //   total_amount: 5000,
+    // await ProductModel.create({
+    //   name: 'Mouse',
+    //   code: 'HSKJD76',
+    //   supplier_cost: 43.12,
     // });
   } catch (error) {
     console.log('Hubo un error al conectarnos a la bd');
