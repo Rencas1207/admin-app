@@ -1,5 +1,4 @@
 import { Schema, Types, model } from 'mongoose';
-import { documentation } from '../../../../nttdata/portals/apps/quanta/src/features/new_initiative/data/index';
 
 const clientSchema = new Schema({
   firstname: {
