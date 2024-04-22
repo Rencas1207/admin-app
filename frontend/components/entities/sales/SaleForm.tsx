@@ -1,16 +1,15 @@
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form'
-import { Button, ButtonGroup, Card, Divider, Flex, FormControl, FormErrorMessage, FormLabel, Heading, IconButton, Input, Select, Text } from '@chakra-ui/react';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
+import { Button, ButtonGroup, Card, Divider, Flex, FormControl, FormErrorMessage, FormLabel, Heading, IconButton, Input, Select, Spinner, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { env } from '~/env';
 import axios from 'axios';
 import { DevTool } from '@hookform/devtools';
-import DatePicker from "react-datepicker";
- import { useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DeleteIcon, SearchIcon } from '@chakra-ui/icons';
 
 const PAYMENT_METHOD_TYPES = [
@@ -86,6 +85,7 @@ const SaleForm = ({saleId}: Props) => {
    const router = useRouter();
    const toast = useToast();
    
+   const [totalAmount, setTotalAmount] = useState(0);
    const [foundClient, setFoundClient] = useState<{_id: string, firstname: string} | null>(null);
 
    const { register, setValue, getValues, handleSubmit, control, reset, formState: {errors} } = useForm<Sale>({
@@ -103,6 +103,11 @@ const SaleForm = ({saleId}: Props) => {
       }
    });
 
+   const productsState = useWatch({
+      control,
+      name: 'products'
+   })
+
    const { fields, append, remove } = useFieldArray({
       control,
       name: 'payment_methods'
@@ -114,17 +119,36 @@ const SaleForm = ({saleId}: Props) => {
    })
 
     const onSubmit = async (data: Sale) => {
+      if(!foundClient) return;
       const PARAMS = !!saleId ? `/${saleId}` : ''
       await axios(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients${PARAMS}`, 
          {
             method: !!saleId ? "PUT" : "POST",
-            data,
+            data: {...data, client: foundClient._id},
             withCredentials: true
          },
       )
       reset();
       router.push('/')
    }
+   
+
+   useEffect(() => {
+      const currentProducts = getValues('products');
+      if(currentProducts.length > 0) {
+         let amount = currentProducts.reduce((prev, curr) => prev + curr.qty * curr.total, 0)
+         setTotalAmount(amount)
+         setValue(`payment_methods.0.amount`, amount);
+      }
+   }, [productsState])
+
+   // if(isLoading) return (
+   //    <Flex height={20} alignItems="center" justifyContent="center">
+   //       <Spinner alignSelf="center" colorScheme='purple' color='purple' />
+   //    </Flex> 
+   // )
+
+   console.log({totalAmount});
 
   return (
     <>
@@ -143,6 +167,7 @@ const SaleForm = ({saleId}: Props) => {
                         const { data } = await axios.get(`${env.           NEXT_PUBLIC_BACKEND_BASE_URL}/clients/document/${document}`, 
                            { withCredentials: true }
                         )
+                        console.log(data);
                         setValue('client', data.data._id);
                         setFoundClient(data.data)
                      }}
@@ -177,7 +202,7 @@ const SaleForm = ({saleId}: Props) => {
              <Flex flexDir="column" mb="4">
                 {
                   products.map((field, index) => (
-                     <Flex gap={3} alignItems="flex-end" mb={5}>
+                     <Flex key={field.id} gap={3} alignItems="flex-end" mb={5}>
                         <IconButton 
                            aria-label='Search' 
                            icon={<SearchIcon />} 
@@ -197,7 +222,6 @@ const SaleForm = ({saleId}: Props) => {
                               const baseCost = micro + supplier_cost
                               const minimumCost = baseCost / (1 - salvament_margin)
                               const finalPrice = +(minimumCost / (1 - profit_margin)).toFixed(3);
-                              console.log({finalPrice});
 
                               if(!!product) {
                                  setValue(`products.${index}`, {
@@ -238,7 +262,13 @@ const SaleForm = ({saleId}: Props) => {
                         </FormControl>
                         <FormControl flex={1}>
                            {index === 0 && <FormLabel>Cantidad</FormLabel> }
-                           <Input type='number'  placeholder='Cantidad'  {...register(`products.${index}.qty`)} />
+                           <Input 
+                              type='number' 
+                              placeholder='Cantidad' 
+                              {...register(`products.${index}.qty`, {
+                                 valueAsNumber: true
+                              })} 
+                           />
                         </FormControl>
                         {
                            index > 0 && (
@@ -251,7 +281,7 @@ const SaleForm = ({saleId}: Props) => {
             <Flex flexDir="column" mb="4">
                 {
                   fields.map((field, index) => (
-                     <Flex gap={3} alignItems="center">
+                     <Flex key={field.id} gap={3} alignItems="center">
                         <FormControl flex={8} marginBottom={5}>
                            <FormLabel>Método</FormLabel>
                            <Select 
@@ -271,7 +301,7 @@ const SaleForm = ({saleId}: Props) => {
                            <Input 
                               type='text' 
                               placeholder='Valor' 
-                              {...register(`payment_methods.${index}.amount`)} 
+                              {...register(`payment_methods.${index}.amount`)}
                            />
                            {/* <FormErrorMessage>{errors.payment_methods?.message}</FormErrorMessage> */}
                         </FormControl>
