@@ -3,7 +3,12 @@ import { Client } from './ClientForm'
 import { useRouter } from 'next/router'
 
 interface ClientFromDB extends Client {
-   _id: string
+   _id: string;
+   firstname: string;
+   sales?: {
+      amount: number;
+      count: number;
+   }
 }
 
 interface Props {
@@ -15,21 +20,26 @@ const ClientsList = ({clients}: Props) => {
   return (
     <>
       <Flex flexDir="column" gap={2} mt={2}>
-      {
-         clients?.map(c => (
-            <Card 
-               key={c._id} 
-               px={3}
-               py={4} 
-               cursor="pointer" 
-               _hover={{ bg: "gray.200", color: "#222", transition: "0.2s background-color ease-out, 0.2s color ease-out" }}
-               onClick={() => router.push(`/clients/${c._id}`)}
-            >
-               <Text>{c.firstname}</Text>
-            </Card>
-         ))
-      }
-    </Flex>
+         {
+         clients
+            .sort((a,b) => (b.sales?.amount || 0) - (a.sales?.amount || 0))
+            .map(c => (
+               <Card 
+                  key={c._id} 
+                  px={3}
+                  py={4} 
+                  cursor="pointer" 
+                  _hover={{ bg: "gray.200", color: "#222", transition: "0.2s background-color ease-out, 0.2s color ease-out" }}
+                  onClick={() => router.push(`/clients/${c._id}`)}
+                  flexDir={"row"}
+                  justifyContent={"space-between"}
+               >
+                  <Text>{c.firstname}</Text>
+                  <Text>$ {c.sales?.amount.toFixed(2) || 0}</Text>
+               </Card>
+            ))
+         }
+      </Flex>
     </>
   )
 }
