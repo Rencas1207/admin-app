@@ -6,6 +6,9 @@ import { env } from '~/env';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import MyForm from 'components/entities/ui/forms/MyForm';
+import MyInput from 'components/entities/ui/inputs/MyInput';
+import LoginButtons from 'components/entities/users/LoginButtons';
 
 const schema = z.object({
    email: z.string().email('Email inválido'),
@@ -17,15 +20,15 @@ type FieldValues = z.infer<typeof schema> // infiere del schema
 const Login: NextPage = () => {
    const { register, getValues, handleSubmit, formState: {errors} } = useForm<FieldValues>({
       resolver: zodResolver(schema),
-      defaultValues: {
-         email: 'rencasdag.12@gmail.com',
-         code: '042023'
-      }
    });
    const router = useRouter();
 
-   const onSubmit = () => {
-      const {email, code} = getValues();
+   const onError = (errors: unknown) => {
+      console.log({errors});
+   }
+
+   const onSubmit = (data: FieldValues) => {
+      const {email, code} = data;
 
       axios
          .post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`, 
@@ -42,25 +45,14 @@ const Login: NextPage = () => {
     <Container marginTop={10} >
       <Card padding={3}>
          <Heading textAlign="center">Iniciar sesión</Heading>
-         <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl isInvalid={!!errors.email} marginBottom={5}>
-               <FormLabel>Email</FormLabel>
-               <Input type='text' placeholder='Ingresa tu email' {...register('email')} />
-                <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.code}>
-               <FormLabel>Código</FormLabel>
-               <Input type='number' placeholder='Ingresa tu código'  {...register('code')} />
-               <FormErrorMessage>{errors.code?.message}</FormErrorMessage>
-            </FormControl>
-            <ButtonGroup marginTop={8} justifyContent="space-between" w="100%">
-               <Button type='submit' colorScheme='blue'>Iniciar sesión</Button>
-               <Button colorScheme='blue' onClick={() => {
-                  const email = getValues('email');
-                  axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`)
-               }}>Quiero un código</Button>
-            </ButtonGroup>
-         </form>
+         <MyForm defaultValues={{
+            email: 'rencasdag.12@gmail.com',
+            code: '612326'
+         }} zodSchema={schema} onSubmit={onSubmit} onError={onError}> 
+            <MyInput fieldName='email' label='Email' />
+            <MyInput fieldName='code' label='Código' />
+            <LoginButtons />
+         </MyForm>
       </Card>
     </Container>
   )

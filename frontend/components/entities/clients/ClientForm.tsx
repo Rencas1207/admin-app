@@ -1,11 +1,12 @@
+import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form'
 import { Button, ButtonGroup, Flex, FormControl, FormErrorMessage, FormLabel, Input, Select } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 import { env } from '~/env';
 import axios from 'axios';
 import { DevTool } from '@hookform/devtools';
+import MyInput from '../ui/inputs/MyInput';
 
 const DOC_TYPES = ["RUC", "Cédula", "Pasaporte", "Identificación Exterior"] as const;
 
@@ -53,11 +54,7 @@ const ClientForm = ({clientId}: Props) => {
   return (
     <>
         <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl isInvalid={!!errors.firstname} marginBottom={5}>
-               <FormLabel>Nombre</FormLabel>
-               <Input type='text' placeholder='Ingresa tu nombre' {...register('firstname')} />
-               <FormErrorMessage>{errors.firstname?.message}</FormErrorMessage>
-            </FormControl>
+            <MyInput fieldName='firstname' label='Nombre' />
             <FormControl isInvalid={!!errors.lastname} marginBottom={5}>
                <FormLabel>Apellido</FormLabel>
                <Input type='text' placeholder='Ingresa tu apellido' {...register('lastname')} />
