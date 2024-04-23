@@ -1,19 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-
-interface UserToken {
-  sub: string;
-  firstname: string;
-  lastname: string;
-  roles: {
-    admin: boolean;
-    seller: boolean;
-  };
-}
-
-export interface CustomRequest extends Request {
-  user: UserToken;
-}
+import { User } from '../schemas/auth';
 
 export const validateUser = () => {
   return (req: any, res: Response, next: NextFunction) => {
@@ -21,7 +8,7 @@ export const validateUser = () => {
       console.log('PROTECTED ROUTES, validating users...');
       const token = req.cookies.jwt;
       const user = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
-      req.user = user as UserToken;
+      req.user = user as User;
       next();
     } catch (error) {
       if (
