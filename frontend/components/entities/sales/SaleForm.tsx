@@ -11,6 +11,7 @@ import { useToast } from '@chakra-ui/react'
 import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from 'react';
 import { DeleteIcon, SearchIcon } from '@chakra-ui/icons';
+import { productSchema } from '../../../../backend/models/product';
 
 const PAYMENT_METHOD_TYPES = [
    "Sin utilización Sist. Financiero", 
@@ -36,17 +37,16 @@ const saleProductSchema = z.object({
    code: z.string(),
    name: z.string().optional(),
    qty: z.number(),
-   unit_price: z.number().optional(),
+   unit_price: z.number(),
    discount: z.number().optional(),
-   total: z.number()
+   // total: z.number()
 })
+
 
 const saleSchema = z.object({
    operation_date: z.date(),
-   products: z.array(saleProductSchema),
-   total_amount: z.number().nonnegative(),
-   client: z.string(),
    client_document: z.string(),
+   products: z.array(saleProductSchema),
    payment_methods: z.array(salePaymentMethodsSchema)
 })
 
@@ -78,7 +78,7 @@ const defaultProduct: ProductForState = {
    code: "",
    name: "",
    qty: 0,
-   total: 0
+   unit_price: 0
 }
 
 const SaleForm = ({saleId}: Props) => {
@@ -88,14 +88,18 @@ const SaleForm = ({saleId}: Props) => {
    const [totalAmount, setTotalAmount] = useState(0);
    const [foundClient, setFoundClient] = useState<{_id: string, firstname: string} | null>(null);
 
-   const { register, setValue, getValues, handleSubmit, control, reset, formState: {errors} } = useForm<Sale>({
+   const { register, setValue, getValues, handleSubmit, control, reset, formState: {errors, isLoading} } = useForm<Sale>({
       resolver: zodResolver(saleSchema),
       defaultValues: async () => {
-         if(!saleId) return { 
-            payment_methods: [defaultPM],
-            products: [defaultProduct]
-         }
-
+         if(!saleId) {
+            
+            return { 
+               operation_date: new Date(),
+               payment_methods: [defaultPM],
+               products: [defaultProduct]
+            }
+         } 
+            
          const { data } = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales/${saleId}`, {
             withCredentials: true
          }); 
@@ -121,10 +125,14 @@ const SaleForm = ({saleId}: Props) => {
     const onSubmit = async (data: Sale) => {
       if(!foundClient) return;
       const PARAMS = !!saleId ? `/${saleId}` : ''
-      await axios(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients${PARAMS}`, 
+      const res = await axios(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales${PARAMS}`, 
          {
             method: !!saleId ? "PUT" : "POST",
-            data: {...data, client: foundClient._id},
+            data: {
+               ...data, 
+               client: foundClient._id,
+               total_amount: totalAmount
+            },
             withCredentials: true
          },
       )
@@ -132,23 +140,20 @@ const SaleForm = ({saleId}: Props) => {
       router.push('/')
    }
    
-
    useEffect(() => {
       const currentProducts = getValues('products');
       if(currentProducts.length > 0) {
-         let amount = currentProducts.reduce((prev, curr) => prev + curr.qty * curr.total, 0)
+         let amount = currentProducts.reduce((prev, curr) => prev + curr.qty * curr.unit_price, 0)
          setTotalAmount(amount)
          setValue(`payment_methods.0.amount`, amount);
       }
    }, [productsState])
 
-   // if(isLoading) return (
-   //    <Flex height={20} alignItems="center" justifyContent="center">
-   //       <Spinner alignSelf="center" colorScheme='purple' color='purple' />
-   //    </Flex> 
-   // )
-
-   console.log({totalAmount});
+   if(isLoading) return (
+      <Flex height={20} alignItems="center" justifyContent="center">
+         <Spinner alignSelf="center" colorScheme='purple' color='purple' />
+      </Flex> 
+   )
 
   return (
     <>
@@ -167,12 +172,10 @@ const SaleForm = ({saleId}: Props) => {
                         const { data } = await axios.get(`${env.           NEXT_PUBLIC_BACKEND_BASE_URL}/clients/document/${document}`, 
                            { withCredentials: true }
                         )
-                        console.log(data);
-                        setValue('client', data.data._id);
                         setFoundClient(data.data)
                      }}
                   />
-                  <Input type='text' placeholder='Ingresa tu nombre' {...register('client_document')} />
+                  <Input type='text' placeholder='Documento' {...register('client_document')} />
                </Flex>
                {!!foundClient && (
                   <Card mt={3} p={3}>
@@ -183,7 +186,9 @@ const SaleForm = ({saleId}: Props) => {
             </FormControl>
             <FormControl isInvalid={!!errors.operation_date} marginBottom={5}>
                <FormLabel>Fecha de la operación</FormLabel>
-               <Input type='date' {...register("operation_date")} />
+               <Input type='date' {...register("operation_date", {
+                  valueAsDate: true
+               })} />
                <FormErrorMessage>{errors.operation_date?.message}</FormErrorMessage>
             </FormControl>
             <Flex alignItems="center" justifyContent={"space-between"} mt={8}>
@@ -228,7 +233,7 @@ const SaleForm = ({saleId}: Props) => {
                                     code,
                                     name: product.name,
                                     qty: 1,
-                                    total: finalPrice
+                                    unit_price: finalPrice
                                  })
                               } else {
                                  toast({
@@ -239,8 +244,6 @@ const SaleForm = ({saleId}: Props) => {
                                     position: 'top'
                                  })
                               }
-
-                              console.log(data);
                            }}
                         />
                         <FormControl flex={2}>
@@ -301,7 +304,9 @@ const SaleForm = ({saleId}: Props) => {
                            <Input 
                               type='text' 
                               placeholder='Valor' 
-                              {...register(`payment_methods.${index}.amount`)}
+                              {...register(`payment_methods.${index}.amount`, {
+                                 valueAsNumber: true
+                              })}
                            />
                            {/* <FormErrorMessage>{errors.payment_methods?.message}</FormErrorMessage> */}
                         </FormControl>
@@ -310,7 +315,9 @@ const SaleForm = ({saleId}: Props) => {
                            <Input 
                               type='number' 
                               placeholder='Plazo' 
-                              {...register(`payment_methods.${index}.time_value`)} 
+                              {...register(`payment_methods.${index}.time_value`, {
+                                 valueAsNumber: true
+                              })} 
                            />
                            {/* <FormErrorMessage>{errors.payment_methods?.message}</FormErrorMessage> */}
                         </FormControl>
