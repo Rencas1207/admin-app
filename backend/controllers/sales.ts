@@ -5,7 +5,7 @@ import ClientModel from '../models/client';
 export const getAll = async (req: any, res: Response) => {
   const token = req.cookies.jwt;
   try {
-    const filter = req.user.isAdmin ? {} : { user: req.user.sub };
+    const filter = req.user.roles.admin ? {} : { user: req.user.sub };
     const sales = await SaleModel.find(filter);
     res.status(200).json({ ok: true, data: sales });
   } catch (error) {

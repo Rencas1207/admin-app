@@ -23,7 +23,9 @@ export const login = async (req: Request, res: Response) => {
     process.env.JWT_SECRET_KEY as string
   );
 
-  res.cookie('jwt', token);
+  res.cookie('jwt', token, {
+    maxAge: 1000 * 60 * 60 * 24 * 180, // 1seg 1min 1hrs 1day 1months
+  });
   res.status(200).json({ ok: true, message: 'Inicio de sesión exitoso' });
 };
 
