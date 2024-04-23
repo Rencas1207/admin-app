@@ -1,11 +1,23 @@
 import Head from "next/head";
 import { env } from "~/env";
-import { Button, ButtonGroup, Card, Container, Heading } from '@chakra-ui/react'
+import { useQuery } from "@tanstack/react-query";
+import { Button, ButtonGroup, Card, Container, Heading, Spinner } from '@chakra-ui/react'
 import { useRouter } from "next/router";
 import axios from "axios";
+import SaleList from "components/entities/sales/SaleList";
 
 export default function Home() {
   const router = useRouter();
+
+  const {data: sales, isLoading} = useQuery({
+    queryKey: ['sales'],
+    queryFn: async () => {
+      const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
+        withCredentials: true
+      })
+      return response.data.data;
+    }
+  });
 
   return (
     <>
@@ -24,6 +36,9 @@ export default function Home() {
           <Heading>
             Mis ventas
           </Heading>
+          {
+            isLoading ? <Spinner /> : <SaleList sales={sales} /> 
+         }
           <ButtonGroup mt={8}>
             <Button colorScheme='purple' onClick={() => {
               router.push('/sales/new')
@@ -42,10 +57,3 @@ export default function Home() {
     </>
   );
 }
-
-// axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
-//                 operation_data: new Date(),
-//                 total_amount: 25000,
-//               }, {
-//                 withCredentials: true
-//               })
