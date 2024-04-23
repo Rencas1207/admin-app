@@ -39,7 +39,6 @@ const saleProductSchema = z.object({
    qty: z.number(),
    unit_price: z.number(),
    discount: z.number().optional(),
-   // total: z.number()
 })
 
 

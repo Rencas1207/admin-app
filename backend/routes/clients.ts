@@ -8,7 +8,7 @@ import {
 } from '../controllers/clients';
 import { validateUser } from '../middlewares/auth';
 import { validateRequest } from '../middlewares/validateRequest';
-import { ClientCreationSchema } from '../schemas/clients';
+import { ClientCreationSchema, ClientEditionSchema } from '../schemas/clients';
 
 const router = express.Router();
 
@@ -18,6 +18,6 @@ router.get('/', getAll);
 router.get('/:id', getById);
 router.get('/document/:document', getByDocument);
 router.post('/', validateRequest(ClientCreationSchema), create);
-router.put('/:id', update);
+router.put('/:id', validateRequest(ClientEditionSchema), update);
 
 export default router;

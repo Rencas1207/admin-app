@@ -9,3 +9,16 @@ export interface User {
     seller: boolean;
   };
 }
+
+export interface AuthRequest<
+  ReqBody = any,
+  Params = any,
+  ResBody = any,
+  ReqQuery = any,
+  Locals extends Record<string, any> = any
+> extends Request<Params, ResBody, ReqBody, ReqQuery, Locals> {
+  user?: User;
+  cookies: {
+    jwt: string;
+  };
+}
