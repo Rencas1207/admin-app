@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import validateObjectId from '../helpers/validateObjectId';
 
 const DOC_TYPES = [
   'RUC',
@@ -17,6 +18,13 @@ export const ClientSchema = z.object({
 
 export const ClientCreationSchema = z.object({
   body: ClientSchema,
+});
+
+export const ClientEditionSchema = z.object({
+  body: ClientSchema.partial(),
+  params: z.object({
+    id: z.custom(validateObjectId, 'Param Id de client inválido'),
+  }),
 });
 
 export type Client = z.infer<typeof ClientSchema>;
