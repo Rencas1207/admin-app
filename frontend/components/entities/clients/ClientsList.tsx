@@ -1,21 +1,8 @@
-import { Card, Flex, Text } from '@chakra-ui/react'
-import { Client } from './ClientForm'
 import { useRouter } from 'next/router'
+import { Card, Flex, Text } from '@chakra-ui/react'
+import { ClientListProps } from 'schemas/ClientSchema';
 
-interface ClientFromDB extends Client {
-   _id: string;
-   firstname: string;
-   sales?: {
-      amount: number;
-      count: number;
-   }
-}
-
-interface Props {
-   clients: ClientFromDB[]
-}
-
-const ClientsList = ({clients}: Props) => {
+const ClientsList = ({ clients }: ClientListProps) => {
   const router = useRouter();
   return (
     <>
