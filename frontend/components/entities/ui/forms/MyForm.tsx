@@ -3,26 +3,34 @@ import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, DefaultValues, FormProvider, FieldValues } from 'react-hook-form';
 import { AnyZodObject, z } from 'zod';
+import { Flex, Spinner } from '@chakra-ui/react';
 
 interface Props {
-   defaultValues: DefaultValues<FieldValues>
    zodSchema: AnyZodObject
-   onSubmit: (data: any) => void
+   onSubmit: (data: any, reset: any) => void
    onError: (data: FieldValues) => void
    children: ReactNode
+   defaultValues?: DefaultValues<FieldValues>
 }
 
-const MyForm = ({defaultValues, zodSchema, onSubmit, onError, children}: Props) => {
+const MyForm = ({defaultValues = {}, zodSchema, onSubmit, onError, children}: Props) => {
    type EntityType = z.infer<typeof zodSchema>
    const methods = useForm<EntityType>({
       resolver: zodResolver(zodSchema),
       defaultValues
-   });
+   }); 
+   
+   if(methods.formState.isLoading) 
+      return (
+      <Flex height={20} alignItems="center" justifyContent="center">
+         <Spinner alignSelf="center" colorScheme='purple' color='purple' />
+      </Flex> 
+   )
 
   return (
    <>
       <FormProvider {...methods}>
-         <form onSubmit={methods.handleSubmit(onSubmit, onError)}>
+         <form onSubmit={methods.handleSubmit((data) => onSubmit(data, methods.reset), onError)}>
             {children}
          </form>
       </FormProvider>
