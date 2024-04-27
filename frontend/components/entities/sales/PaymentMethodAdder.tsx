@@ -1,8 +1,8 @@
-import { useFieldArray } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { Flex } from "@chakra-ui/react"
 import MyInput from "../ui/inputs/MyInput"
 import MySelect from "../ui/selects/MySelect"
-import { PAYMENT_METHOD_TYPES, Sale, TIME_UNITS } from "schemas/SaleSchema"
+import { PAYMENT_METHOD_TYPES, PaymentMethod, Sale, TIME_UNITS } from "schemas/SaleSchema"
 import MyDeleteIcon from "../ui/icons/MyDeleteIcon"
 
 interface Props {
@@ -10,16 +10,16 @@ interface Props {
 }
 
 const PaymentMethodAdder = ({fieldName}: Props) => {
-   const { fields, append, remove } = useFieldArray({ name: fieldName })
-
+   const { watch } = useFormContext();
+   const paymentMethods = watch(fieldName)
    return (
       <Flex flexDir="column" mb="4">
-         {fields.map((field, index) => (
-            <Flex key={field.id} gap={3} alignItems="center">
+         {paymentMethods.map((_: PaymentMethod, index: number) => (
+            <Flex key={index} gap={3} alignItems="center">
                <MySelect 
                   fieldName={`payment_methods.${index}.method`} 
                   label='Metódo' 
-                  options={PAYMENT_METHOD_TYPES} 
+                  options={PAYMENT_METHOD_TYPES}                   
                />
                {/* <FormControl flex={8} marginBottom={5}>
                   <FormLabel>Método</FormLabel>
@@ -38,13 +38,15 @@ const PaymentMethodAdder = ({fieldName}: Props) => {
                <MyInput 
                   fieldName={`payment_methods.${index}.amount`} 
                   label='Valor' 
+                  flex={3}
                   valueAsNumber={true} 
                   showLabel={index === 0} 
+                  mb={0} 
                />
                <MyInput 
                   fieldName={`payment_methods.${index}.time_value`} 
-                  flex={5} 
-                  mb={5} 
+                  flex={1} 
+                  mb={0} 
                   label='Plazo' 
                   valueAsNumber={true} 
                   showLabel={index === 0} 
