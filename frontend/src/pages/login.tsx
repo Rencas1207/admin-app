@@ -22,7 +22,8 @@ const Login: NextPage = () => {
          { code },
          {withCredentials: true}
          )
-         .then(() => {
+         .then(({data}) => {
+            localStorage.setItem('user', JSON.stringify(data.data))
             router.push('/');
          })
          .catch(console.log);
@@ -35,7 +36,7 @@ const Login: NextPage = () => {
          <MyForm 
             defaultValues={{
                email: 'rencasdag.12@gmail.com',
-               code: '612326'
+               code: '021054'
             }} 
             zodSchema={LoginSchema} 
             onSubmit={onSubmit} 

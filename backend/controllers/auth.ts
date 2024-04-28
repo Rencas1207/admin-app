@@ -13,20 +13,23 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ ok: false, message: 'Código incorrecto' });
   }
 
-  const token = jwt.sign(
-    {
-      sub: user._id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      roles: user.roles,
-    },
-    process.env.JWT_SECRET_KEY as string
-  );
+  const tokenPayload = {
+    sub: user._id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    roles: user.roles,
+  };
+
+  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY as string);
 
   res.cookie('jwt', token, {
     maxAge: 1000 * 60 * 60 * 24 * 180, // 1seg 1min 1hrs 1day 1months
   });
-  res.status(200).json({ ok: true, message: 'Inicio de sesión exitoso' });
+  res.status(200).json({
+    ok: true,
+    data: tokenPayload,
+    message: 'Inicio de sesión exitoso',
+  });
 };
 
 export const generateCode = async (req: Request, res: Response) => {
@@ -53,5 +56,5 @@ export const generateCode = async (req: Request, res: Response) => {
     subject: `Hola 😀, este es tú código para ingresar ${user.login_code}`,
     html: `Código: ${user.login_code}`,
   });
-  res.send('Generate code');
+  res.status(200).json({ ok: true, message: 'Código enviado con éxito' });
 };
