@@ -7,8 +7,10 @@ import MyForm from 'components/entities/ui/forms/MyForm';
 import MyInput from 'components/entities/ui/inputs/MyInput';
 import LoginButtons from 'components/entities/users/LoginButtons';
 import { LoginSchema, LoginType } from 'schemas/AuthSchema';
+import useAuth from 'hooks/useAuth';
 
 const Login: NextPage = () => {
+   const { setUser } = useAuth();
    const router = useRouter();
 
    const onError = (errors: unknown) => {
@@ -23,7 +25,9 @@ const Login: NextPage = () => {
          {withCredentials: true}
          )
          .then(({data}) => {
-            localStorage.setItem('user', JSON.stringify(data.data))
+            const tokenPayload = data.data
+            localStorage.setItem('user', JSON.stringify(tokenPayload))
+            setUser(tokenPayload)
             router.push('/');
          })
          .catch(console.log);

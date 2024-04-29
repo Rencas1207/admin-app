@@ -17,6 +17,7 @@ export const login = async (req: Request, res: Response) => {
     sub: user._id,
     firstname: user.firstname,
     lastname: user.lastname,
+    imageUrl: user.imageUrl,
     roles: user.roles,
   };
 

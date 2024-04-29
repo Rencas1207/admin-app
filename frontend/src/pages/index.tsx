@@ -5,6 +5,7 @@ import { Button, ButtonGroup, Card, Container, Heading, Spinner } from '@chakra-
 import { useRouter } from "next/router";
 import axios from "axios";
 import SaleList from "components/entities/sales/SaleList";
+import AppHeader from "components/global/AppHeader";
 
 export default function Home() {
   const router = useRouter();
@@ -27,18 +28,19 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container marginTop={8}>
-        <Button mb={4} colorScheme='blue' onClick={() => {
+        <AppHeader />
+        {/* <Button mb={4} colorScheme='blue' onClick={() => {
           router.push('/login')
         }}>
           Iniciar sesión
-        </Button>
+        </Button> */}
         <Card p={4}>
           <Heading>
             Mis ventas
           </Heading>
           {
             isLoading ? <Spinner /> : <SaleList sales={sales} /> 
-         }
+          }
           <ButtonGroup mt={8}>
             <Button colorScheme='purple' onClick={() => {
               router.push('/sales/new')
@@ -52,7 +54,6 @@ export default function Home() {
             </Button> 
           </ButtonGroup>
         </Card>
-         
       </Container>
     </>
   );
