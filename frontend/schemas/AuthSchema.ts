@@ -9,6 +9,7 @@ export const TokenPayloadSchema = z.object({
    sub: z.string(),
    firstname: z.string(),
    lastname: z.string(),
+   imageUrl: z.string(),
    roles: z.object({
       admin: z.boolean(),
       seller: z.boolean()

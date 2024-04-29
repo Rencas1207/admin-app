@@ -19,6 +19,7 @@ const userSchema = new Schema({
     length: 6,
     required: true,
   },
+  imageUrl: String,
   roles: {
     type: {
       admin: Boolean,
