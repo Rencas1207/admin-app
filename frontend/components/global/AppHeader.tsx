@@ -3,7 +3,7 @@ import { Avatar, Button, Flex } from '@chakra-ui/react'
 import useAuth from 'hooks/useAuth';
 
 const AppHeader = () => {
-   const { user } = useAuth();
+   const { user, setUser } = useAuth();
    const router = useRouter();
    return (
       <Flex justifyContent="space-between" alignItems="center" mb={8}>
@@ -20,6 +20,7 @@ const AppHeader = () => {
                <Avatar src={user.imageUrl} w={16} h={16} />
                <Button size="sm" colorScheme='red' onClick={() => {
                   localStorage.removeItem('user')
+                  setUser(null)
                   document.cookie = "jwt=;expires=Thu, 01 Jan 1970 00:00:01 GMT;"
                   router.push('/login')
                }}>
