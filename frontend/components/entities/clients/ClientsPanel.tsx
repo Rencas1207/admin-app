@@ -1,8 +1,10 @@
-import { Button, ButtonGroup, Spinner, TabPanel } from "@chakra-ui/react"
+import { Button, Spinner, TabPanel } from "@chakra-ui/react"
 import ClientsList from "./ClientsList"
 import axios from "axios";
 import { env } from "~/env";
 import { useQuery } from "@tanstack/react-query";
+import MyModal from "../ui/modals/MyModal";
+import ClientForm from "./ClientForm";
 
 const ClientsPanel = () => {
    const {data: clients, isLoading} = useQuery({
@@ -14,15 +16,15 @@ const ClientsPanel = () => {
         return response.data.data;
       }
    });
+
    if (isLoading) return <Spinner />
+   
    return (
       <TabPanel>
-         <ClientsList clients={clients} />
-         <ButtonGroup mt={8}>
-            <Button colorScheme='purple' onClick={() => {}}>
-               Nueva cliente
-            </Button> 
-         </ButtonGroup>
+         <ClientsList clients={clients} />         
+         <MyModal title="Nuevo cliente">
+            <ClientForm />
+         </MyModal> 
       </TabPanel>
    )
 }
