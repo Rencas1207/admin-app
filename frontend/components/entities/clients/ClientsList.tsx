@@ -6,7 +6,7 @@ const ClientsList = ({ clients }: ClientListProps) => {
   const router = useRouter();
   return (
     <>
-      <Flex flexDir="column" gap={2} mt={2}>
+      <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll">
          {
          clients
             .sort((a,b) => (b.sales?.amount || 0) - (a.sales?.amount || 0))

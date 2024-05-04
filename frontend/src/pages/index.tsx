@@ -1,25 +1,12 @@
 import Head from "next/head";
-import { env } from "~/env";
-import { useQuery } from "@tanstack/react-query";
-import { Button, ButtonGroup, Card, Container, Heading, Spinner } from '@chakra-ui/react'
 import { useRouter } from "next/router";
-import axios from "axios";
-import SaleList from "components/entities/sales/SaleList";
+import { Card, Container } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import AppHeader from "components/global/AppHeader";
+import SalesPanel from "components/entities/sales/SalesPanel";
+import ClientsPanel from "components/entities/clients/ClientsPanel";
 
 export default function Home() {
-  const router = useRouter();
-
-  const {data: sales, isLoading} = useQuery({
-    queryKey: ['sales'],
-    queryFn: async () => {
-      const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
-        withCredentials: true
-      })
-      return response.data.data;
-    }
-  });
-
   return (
     <>
       <Head>
@@ -29,30 +16,21 @@ export default function Home() {
       </Head>
       <Container marginTop={8}>
         <AppHeader />
-        {/* <Button mb={4} colorScheme='blue' onClick={() => {
-          router.push('/login')
-        }}>
-          Iniciar sesión
-        </Button> */}
         <Card p={4}>
-          <Heading>
-            Mis ventas
-          </Heading>
-          {
-            isLoading ? <Spinner /> : <SaleList sales={sales} /> 
-          }
-          <ButtonGroup mt={8}>
-            <Button colorScheme='purple' onClick={() => {
-              router.push('/sales/new')
-            }}>
-              Nueva venta
-            </Button> 
-            <Button colorScheme='purple' onClick={() => {
-              router.push('/clients')
-            }}>
-              Clientes
-            </Button> 
-          </ButtonGroup>
+          <Tabs variant="enclosed" colorScheme="blue">
+            <TabList>
+              <Tab>💰 Ventas</Tab>
+              <Tab>🤝 Clientes</Tab>
+              <Tab>🛒 Productos</Tab>
+            </TabList>
+            <TabPanels>
+              <SalesPanel />
+              <ClientsPanel />
+              <TabPanel>
+                <p>three!</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Card>
       </Container>
     </>

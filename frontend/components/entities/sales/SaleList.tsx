@@ -1,6 +1,6 @@
-import { Card, Flex, Text } from '@chakra-ui/react'
-import { Sale } from './SaleForm'
 import { useRouter } from 'next/router'
+import { Card, Flex, Text } from '@chakra-ui/react'
+import { Sale } from 'schemas/SaleSchema';
 
 interface SaleFromDB extends Sale {
    _id: string;
@@ -16,7 +16,7 @@ const SaleList = ({sales}: Props) => {
   const router = useRouter();
   return (
     <>
-      <Flex flexDir="column" gap={2} mt={2}>
+      <Flex flexDir="column" padding="1" gap={2} mt={2} maxH="40vh" overflowY="scroll">
          {
          sales
             .sort((a,b) => (b?.total_amount || 0) - (a?.total_amount || 0))
