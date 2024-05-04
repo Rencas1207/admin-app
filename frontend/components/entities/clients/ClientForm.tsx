@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { Button, ButtonGroup, Flex } from '@chakra-ui/react';
+import { Button, ButtonGroup, Flex, useDisclosure, useModalContext } from '@chakra-ui/react';
 import { env } from '~/env';
 import MyInput from '../ui/inputs/MyInput';
 import MyForm from '../ui/forms/MyForm';
@@ -8,7 +8,7 @@ import MySelect from '../ui/selects/MySelect';
 import { Client, ClientFormProps, ClientSchema, DOC_TYPES } from 'schemas/ClientSchema';
 
 const ClientForm = ({clientId}: ClientFormProps) => {
-   const router = useRouter();
+   const { onClose } = useModalContext();
 
    const setDefaultValues = async () => {
       if(!clientId) return {}
@@ -30,7 +30,7 @@ const ClientForm = ({clientId}: ClientFormProps) => {
          },
       )
       reset();
-      router.push('/clients')
+      onClose();
    }
 
    const onError = (errors: unknown) => {
@@ -50,15 +50,10 @@ const ClientForm = ({clientId}: ClientFormProps) => {
       <Flex gap={3} mb={5}>
          <MySelect<Client> options={DOC_TYPES} fieldName='document_type' label='Tipo de documento'  />
          <MyInput<Client> fieldName='document_value' label='Documento' mb={0} />
-      </Flex>
-      <ButtonGroup>
-         <Button colorScheme='purple' type='submit'>
-            {!!clientId ? 'Guardar cambios' : 'Crear'}
-         </Button>
-         <Button colorScheme='gray' type='submit' onClick={() => router.back()}>
-            Volver
-         </Button>
-      </ButtonGroup>
+      </Flex>     
+      <Button colorScheme='purple' type='submit' mb={2}>
+         {!!clientId ? 'Guardar cambios' : 'Crear'}
+      </Button>
    </MyForm>
   )
 }

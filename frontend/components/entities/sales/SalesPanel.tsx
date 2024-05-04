@@ -2,11 +2,10 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import { env } from '~/env'
 import { useQuery } from '@tanstack/react-query'
-import { Button, ButtonGroup, Heading, Spinner, TabPanel } from '@chakra-ui/react'
+import { Button, ButtonGroup, Spinner, TabPanel } from '@chakra-ui/react'
 import SaleList from './SaleList'
 
 const SalesPanel = () => {
-   const router = useRouter();
    const {data: sales, isLoading} = useQuery({
       queryKey: ['sales'],
       queryFn: async () => {
@@ -16,15 +15,16 @@ const SalesPanel = () => {
          return response.data.data;
       }
    });
+
    if (isLoading) return <Spinner />
+   
    return (
       <TabPanel>
-         <Heading>Mis ventas</Heading>
          <SaleList sales={sales} />
          <ButtonGroup mt={8}>
-         <Button colorScheme='purple' onClick={() => {}}>
-            Nueva venta
-         </Button> 
+            <Button colorScheme='purple' onClick={() => {}}>
+               Nueva venta
+            </Button> 
          </ButtonGroup>
       </TabPanel>
   )
