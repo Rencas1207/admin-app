@@ -30,6 +30,7 @@ const ProductsList = ({searchText, onClick, selectedProducts}: Props) => {
      <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={4}>
          {products.map(p => (
                <ProductItem 
+                  key={p._id}
                   product={p}
                   onClick={onClick}
                   selected={selectedProducts?.includes(p)}

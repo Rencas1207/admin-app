@@ -1,10 +1,8 @@
 import { useEffect } from 'react'
-import axios from 'axios'
 import { useFormContext } from 'react-hook-form'
 import { Flex, Text, useToast } from '@chakra-ui/react'
-import { env } from '~/env'
-import MyInput from '../ui/inputs/MyInput'
-import MyDeleteIcon from '../ui/icons/MyDeleteIcon'
+import MyInput from 'components/ui/inputs/MyInput'
+import MyDeleteIcon from 'components/ui/icons/MyDeleteIcon'
 import { Product,  Sale } from 'schemas/SaleSchema'
 
 interface Props {
