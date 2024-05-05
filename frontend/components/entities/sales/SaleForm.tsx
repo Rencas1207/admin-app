@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Card, Divider, Flex, Heading, Text } from '@chakra-ui/react';
+import { Divider, Flex, Heading } from '@chakra-ui/react';
 import { env } from '~/env';
 import axios from 'axios';
 import { defaultPM, defaultProduct, Sale, SaleFormProps, saleSchema, } from 'schemas/SaleSchema';
 import MyForm from '../ui/forms/MyForm';
-import MyInput from '../ui/inputs/MyInput';
 import ProductAdder from './ProductAdder';
 import PaymentMethodAdder from './PaymentMethodAdder';
 import MyAdderButton from '../ui/buttons/MyAdderButton';
@@ -22,7 +21,7 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
    const onSubmit = async (data: Sale, reset: any) => {
    if(!foundClient) return;
    const PARAMS = !!saleId ? `/${saleId}` : ''
-   const res = await axios(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales${PARAMS}`, 
+   await axios(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales${PARAMS}`, 
       {
          method: !!saleId ? "PUT" : "POST",
          data: {
@@ -64,7 +63,7 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
          zodSchema={saleSchema} 
          defaultValues={setDefaultValues}
       >
-         <Flex gap={3}>
+         {/* <Flex gap={3}>
             <MyInput<Sale> 
                fieldName='client_document' 
                label='Documento del cliente' 
@@ -88,8 +87,8 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
             label='Fecha de la operación' 
             type='date'
             valueAsDate 
-         />
-         <Flex alignItems="center" justifyContent={"space-between"} mt={4}>
+         /> */}
+         <Flex alignItems="center" justifyContent={"space-between"}>
             <Heading size="md">Productos</Heading>
             {/* <MyAdderButton fieldName='products' /> */}
             <MyModal title='Elegir productos' buttonText='Agregar' buttonColor='blue'>

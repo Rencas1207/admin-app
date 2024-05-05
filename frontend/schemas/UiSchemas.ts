@@ -7,6 +7,9 @@ export interface MyInputsProps<T> {
    showLabel?: boolean;
    placeholder?: string;
    mb?: number;
+   size?: Sizes;
    flex?: number;
    searchFn?: ((state: any) => void) | boolean;
 }
+
+export type Sizes = "xs" | "sm" | "md" | "lg"

@@ -1,12 +1,16 @@
-import { useRouter } from 'next/router'
 import axios from 'axios';
 import { env } from '~/env';
 import { useQuery } from '@tanstack/react-query';
-import { Card, Flex, Spinner, Text } from '@chakra-ui/react'
+import {  Flex, Spinner, Text } from '@chakra-ui/react'
 import { ClientFromDB } from 'schemas/ClientSchema';
+import ClientItem from './ClientItem';
 
-const ClientsList = () => {
-  const router = useRouter();
+interface Props {
+   onClick: (client: ClientFromDB) => void
+   selectedClientId: string | undefined;
+}
+
+const ClientsList = ({ onClick, selectedClientId }: Props) => {
   const {data: clients, isLoading} = useQuery<ClientFromDB[]>({
       queryKey: ['clients'],
       queryFn: async () => {
@@ -19,31 +23,24 @@ const ClientsList = () => {
 
    if (isLoading) return <Spinner />
    if (!clients) return <Text mb={6}>No hay clientes para mostrar.</Text>
-  return (
-    <>
-      <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={4}>
-         {
-         clients
-            .sort((a,b) => (b.sales?.amount || 0) - (a.sales?.amount || 0))
-            .map(c => (
-               <Card 
-                  key={c._id} 
-                  px={3}
-                  py={4} 
-                  cursor="pointer" 
-                  _hover={{ bg: "gray.200", color: "#222", transition: "0.2s background-color ease-out, 0.2s color ease-out" }}
-                  onClick={() => router.push(`/clients/${c._id}`)}
-                  flexDir={"row"}
-                  justifyContent={"space-between"}
-               >
-                  <Text>{c.firstname}</Text>
-                  <Text>$ {c.sales?.amount.toFixed(2) || 0}</Text>
-               </Card>
-            ))
-         }
-      </Flex>
-    </>
-  )
+   return (
+      <>
+         <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={4}>
+            {
+            clients
+               .sort((a,b) => (b.sales?.amount || 0) - (a.sales?.amount || 0))
+               .map(c => (
+                  <ClientItem 
+                     key={c._id} 
+                     client={c} 
+                     onClick={onClick} 
+                     selected={c._id === selectedClientId} 
+                  />
+               ))
+            }
+         </Flex>
+      </>
+   )
 }
 
 export default ClientsList
