@@ -4,6 +4,7 @@ import ProductsList from './ProductsList'
 import { Search2Icon } from '@chakra-ui/icons';
 import { ProductFromDB } from 'schemas/ProductSchema';
 import { useFieldArray, useFormContext } from 'react-hook-form';
+import calcProductPrice from 'helpers/calcProductPrice';
 
 const ProductSearcher = () => {
   const { control } = useFormContext();
@@ -27,12 +28,11 @@ const ProductSearcher = () => {
   }
 
   const handleSelect = () => {
-    for (const prod of selectedProducts) {
+    for (const product of selectedProducts) {
       append({
-        code: prod.code,
-        name: prod.name,
+        name: product.name,
         qty: 1,
-        unit_price: 10,
+        unit_price: calcProductPrice(product),
       })
     }
     onClose();

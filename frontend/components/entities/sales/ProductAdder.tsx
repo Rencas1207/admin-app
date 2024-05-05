@@ -35,9 +35,9 @@ function ProductAdder({fieldName}: Props) {
 
    return (
       <Flex flexDir="column">
-         {products.map((_: Product, index: number) => (
-            <Flex key={index} gap={3} alignItems="flex-end" mb={5}>
-               <MyInput 
+         {products.map((product: Product, index: number) => (
+            <Flex key={index} gap={3} alignItems="center" justifyContent={"space-between"} mb={5} w="100%"> 
+               {/* <MyInput 
                   fieldName={`products.${index}.code`} 
                   flex={2} 
                   label='Código' 
@@ -74,22 +74,26 @@ function ProductAdder({fieldName}: Props) {
                         })
                      }
                   }} 
-               />
-               <MyInput 
+               /> */}
+               {/* <MyInput 
                   fieldName={`products.${index}.name`} 
                   flex={4} 
                   label='Denominación' 
                   showLabel={index === 0} 
-               />
-               <MyInput 
+               /> */}
+               <Text flex={8}>{product.name}</Text>
+               <Flex alignItems="center" gap={3} flex={3}>
+                  <MyInput 
                   fieldName={`products.${index}.qty`} 
-                  flex={1} 
+                  // flex={1} 
                   label='Cantidad' 
-                  showLabel={index === 0} 
+                  showLabel={false} 
                   type='number'
                   valueAsNumber={true}
+                  mb={0}
                />
                <MyDeleteIcon<Sale> fieldName="products" index={index} />
+               </Flex>
             </Flex>
          ))}  
       </Flex> 
