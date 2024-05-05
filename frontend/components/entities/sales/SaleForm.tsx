@@ -5,13 +5,13 @@ import { env } from '~/env';
 import axios from 'axios';
 import { Sale, SaleFormProps, saleSchema, } from 'schemas/SaleSchema';
 import ProductAdder from '../products/ProductAdder';
-import PaymentMethodAdder from './PaymentMethodAdder';
 import SaleFormButtons from './SaleFormButtons';
 import ProductSearcher from '../products/ProductSearcher';
 import getDateForInput from 'helpers/getDateForInput';
 import MyForm from 'components/ui/forms/MyForm';
 import MyAdderButton from 'components/ui/buttons/MyAdderButton';
 import MyModal from 'components/ui/modals/MyModal';
+import PaymentMethodAdder from '../payment_methods/PaymentMethodAdder';
 
 const SaleForm = ({ saleId }: SaleFormProps) => {
    const router = useRouter();
@@ -74,7 +74,10 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
              <MyAdderButton fieldName='payment_methods' />
          </Flex>
          <Divider mb={3} mt={2} />
-         <PaymentMethodAdder fieldName='payment_methods' />
+         <PaymentMethodAdder
+            fieldName="payment_methods"
+            canRemove={!saleId}
+         />
          <SaleFormButtons saleId={saleId as string} />
       </MyForm>
     </>

@@ -1,19 +1,19 @@
-import React, { ReactNode } from 'react'
+import { Children, ReactNode, cloneElement } from "react"
+import { Flex, Spinner } from '@chakra-ui/react';
 import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, DefaultValues, FormProvider, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
-import { Flex, Spinner } from '@chakra-ui/react';
 
-interface Props {
+interface Props<T> {
    zodSchema: z.Schema
-   onSubmit: (data: any, reset: any) => void
+   onSubmit: (data: T, reset: any) => Promise<void> | void
    onError: (data: FieldValues) => void
    children: ReactNode
    defaultValues?: DefaultValues<FieldValues>
 }
 
-const MyForm = ({defaultValues = {}, zodSchema, onSubmit, onError, children}: Props) => {
+const MyForm = <T,>({defaultValues, zodSchema, onSubmit, onError, children}: Props<T>) => {
    type EntityType = z.infer<typeof zodSchema>
    const methods = useForm<EntityType>({
       resolver: zodResolver(zodSchema),
@@ -27,11 +27,32 @@ const MyForm = ({defaultValues = {}, zodSchema, onSubmit, onError, children}: Pr
       </Flex> 
    )
 
+   const renderChildren = () => {
+      return Children.map(children, (child: any) => {
+         let props = {}
+
+         if ("name" in child?.type) {
+            props = {
+               getValues: methods.getValues,
+               onSubmit,
+               reset: methods.reset,
+            }
+         }
+         return cloneElement(child, props)
+      })
+  }
+
   return (
    <>
       <FormProvider {...methods}>
-         <form onSubmit={methods.handleSubmit((data) => onSubmit(data, methods.reset), onError)}>
-            {children}
+         <form onSubmit={methods.handleSubmit(
+            async (data) => {
+               await onSubmit(data, methods.reset)
+            }, (errors) => {
+            console.log({ data: methods.getValues() })
+            onError(errors)
+          })}>
+             {renderChildren()}
          </form>
       </FormProvider>
       <DevTool control={methods.control} />

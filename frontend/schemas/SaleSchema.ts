@@ -13,7 +13,7 @@ export const PAYMENT_METHOD_TYPES = [
 
 export const TIME_UNITS = z.enum(["Días", "Meses", "Años"])
 
-const saleProductSchema = z.object({
+export const saleProductSchema = z.object({
    code: z.string(),
    name: z.string().optional(),
    iva: z.number(),
@@ -21,7 +21,7 @@ const saleProductSchema = z.object({
    discount: z.number().optional(),
 })
 
-const salePaymentMethodsSchema = z.object({
+export const salePaymentMethodSchema = z.object({
    method: z.enum(PAYMENT_METHOD_TYPES),
    amount: z.number().min(1, "El monto debe ser mayor a 0"),
    time_unit: TIME_UNITS.nullish(),
@@ -35,11 +35,11 @@ export const saleSchema = z.object({
    trigger_update: z.number(),
    referalDoc: z.string().nullish(),
    products: z.array(saleProductSchema),
-   payment_methods: z.array(salePaymentMethodsSchema),
+   payment_methods: z.array(salePaymentMethodSchema),
 })
 
 export type Sale = z.infer<typeof saleSchema>
-export type PaymentMethod = z.infer<typeof salePaymentMethodsSchema>
+export type PaymentMethod = z.infer<typeof salePaymentMethodSchema>
 export type ProductForState = z.infer<typeof saleProductSchema>
 
 export interface SaleFromDB extends Sale {
