@@ -1,9 +1,9 @@
 import { useFormContext } from "react-hook-form"
 import { Flex, Text } from "@chakra-ui/react"
-import MyInput from "../ui/inputs/MyInput"
-import MySelect from "../ui/selects/MySelect"
+import MyInput from "components/ui/inputs/MyInput"
+import MySelect from "components/ui/selects/MySelect"
 import { PAYMENT_METHOD_TYPES, PaymentMethod, Sale, TIME_UNITS } from "schemas/SaleSchema"
-import MyDeleteIcon from "../ui/icons/MyDeleteIcon"
+import MyDeleteIcon from "components/ui/icons/MyDeleteIcon"
 
 interface Props {
    fieldName: keyof Sale;

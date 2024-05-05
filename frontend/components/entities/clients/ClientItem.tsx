@@ -1,4 +1,5 @@
-import { Card, Text } from "@chakra-ui/react"
+import { Card, Text, Flex, useToast } from "@chakra-ui/react"
+import { copyToClipboard } from "helpers/copyToClipboard";
 import { ClientFromDB } from "schemas/ClientSchema";
 
 interface Props {
@@ -8,23 +9,65 @@ interface Props {
 }
 
 const ClientItem = ({client, onClick, selected}: Props) => {
-  return (
-    <Card
-      key={client._id} 
-      px={3}
-      py={4} 
-      cursor="pointer" 
-      bg={selected ? "blue.500" : "white"}
-      color={selected ? "white" : "black"}
-      _hover={selected ? {} : { bg: "gray.200", color: "#222", transition: "0.2s background-color ease-out, 0.2s color ease-out" }}
-      onClick={() => onClick(client)}
-      flexDir={"row"}
-      justifyContent={"space-between"}
-   >
-      <Text>{client.firstname}</Text>
-      <Text>$ {client.sales?.amount.toFixed(2) || 0}</Text>
-   </Card>
-  )
+   const noSales = client.sales?.count === 0 || !client.sales?.count
+   const s = client.sales?.count === 1 ? "" : "s"
+   const toast = useToast()
+   console.log({ client })
+   return (
+      <Card
+         key={client._id} 
+         px={3}
+         py={4} 
+         cursor="pointer" 
+         bg={selected ? "gray.100" : "white"}
+         color="black"
+         _hover={selected ? {} : {
+            backgroundColor: "gray.100",
+            color: "#222",
+         }}
+         onClick={() => onClick(client)}
+         flexDir={"row"}
+         justifyContent={"space-between"}
+      >
+         <Flex flexDir="column">
+            <Text>
+               {client.firstname} {client.lastname}
+            </Text>
+            <Text
+               fontSize="xs"
+               display="inline"
+               color="blue.400"
+               _hover={{ color: "green.400" }}
+               onClick={(e) =>
+                  copyToClipboard({
+                     e,
+                     text: client.document_value,
+                     toast,
+                  })
+               }
+            >
+               {client.document_value}{" "}
+               <Text as="span" fontSize="xs" display="inline" color="gray">
+                  ({client.document_type})
+               </Text>
+            </Text>
+         </Flex>
+         <Flex flexDir="column" alignItems="flex-end">
+            {noSales ? (
+               <Text color="red.600">Sin ventas</Text>
+            ) : (
+               <Text color="green" title={`${client.sales?.count} venta${s}`}>
+                  $ {client.sales?.amount?.toFixed(2)}
+               </Text>
+            )}
+            {(client?.comissions || 0) > 0 && (
+               <Text as="span" fontSize="xs" color="purple.400">
+                  ${client?.comissions} en comisiones
+               </Text>
+            )}
+         </Flex>
+      </Card>
+   )
 }
 
 export default ClientItem

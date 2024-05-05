@@ -14,6 +14,8 @@ const clientSchema = new Schema({
     required: true,
     unique: true,
   },
+  phoneCode: { type: String },
+  phoneNumber: { type: String },
   document_type: {
     type: String,
     required: true,
@@ -22,11 +24,11 @@ const clientSchema = new Schema({
     type: String,
     required: true,
   },
+  searchField: { type: String, required: true },
+  comissions: Number,
   sales: {
-    type: {
-      count: Number,
-      amount: Number,
-    },
+    count: Number,
+    amount: Number,
   },
 });
 

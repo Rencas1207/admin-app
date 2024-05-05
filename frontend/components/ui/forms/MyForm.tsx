@@ -2,11 +2,11 @@ import React, { ReactNode } from 'react'
 import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, DefaultValues, FormProvider, FieldValues } from 'react-hook-form';
-import { AnyZodObject, z } from 'zod';
+import { z } from 'zod';
 import { Flex, Spinner } from '@chakra-ui/react';
 
 interface Props {
-   zodSchema: AnyZodObject
+   zodSchema: z.Schema
    onSubmit: (data: any, reset: any) => void
    onError: (data: FieldValues) => void
    children: ReactNode

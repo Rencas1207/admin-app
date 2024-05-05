@@ -3,15 +3,15 @@ import { useRouter } from 'next/router';
 import { Divider, Flex, Heading } from '@chakra-ui/react';
 import { env } from '~/env';
 import axios from 'axios';
-import { defaultPM, defaultProduct, Sale, SaleFormProps, saleSchema, } from 'schemas/SaleSchema';
-import MyForm from '../ui/forms/MyForm';
+import { Sale, SaleFormProps, saleSchema, } from 'schemas/SaleSchema';
 import ProductAdder from './ProductAdder';
 import PaymentMethodAdder from './PaymentMethodAdder';
-import MyAdderButton from '../ui/buttons/MyAdderButton';
 import SaleFormButtons from './SaleFormButtons';
-import MyModal from '../ui/modals/MyModal';
 import ProductSearcher from '../products/ProductSearcher';
 import getDateForInput from 'helpers/getDateForInput';
+import MyForm from 'components/ui/forms/MyForm';
+import MyAdderButton from 'components/ui/buttons/MyAdderButton';
+import MyModal from 'components/ui/modals/MyModal';
 
 const SaleForm = ({ saleId }: SaleFormProps) => {
    const router = useRouter();
@@ -44,8 +44,6 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
       if(!saleId) {    
          return { 
             operation_date: getDateForInput(),
-            // payment_methods: [defaultPM],
-            // products: [defaultProduct]
          }
       } 
          
@@ -57,42 +55,16 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
 
   return (
     <>
-      <MyForm 
+      <MyForm
          onError={onError} 
          onSubmit={onSubmit} 
          zodSchema={saleSchema} 
          defaultValues={setDefaultValues}
       >
-         {/* <Flex gap={3}>
-            <MyInput<Sale> 
-               fieldName='client_document' 
-               label='Documento del cliente' 
-               searchFn={async (document) => {
-                  if(!document) return;
-                  const { data } = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients/document/${document}`, 
-                     { withCredentials: true }
-                  )  
-                  setFoundClient(data.data)
-               }}   
-            />
-            
-         </Flex>
-         {!!foundClient && (
-            <Card mb={5} p={3}>
-               <Text>{foundClient?.firstname}</Text>
-            </Card>
-         )}
-          <MyInput<Sale> 
-            fieldName='operation_date' 
-            label='Fecha de la operación' 
-            type='date'
-            valueAsDate 
-         /> */}
          <Flex alignItems="center" justifyContent={"space-between"}>
             <Heading size="md">Productos</Heading>
-            {/* <MyAdderButton fieldName='products' /> */}
             <MyModal title='Elegir productos' buttonText='Agregar' buttonColor='blue'>
-               <ProductSearcher />
+                {() => <ProductSearcher />}
             </MyModal>
          </Flex>
          <Divider mb={3} mt={2} />

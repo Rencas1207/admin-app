@@ -4,7 +4,7 @@ import SaleList from './SaleList'
 const SalesPanel = () => {
    return (
       <TabPanel>
-         <SaleList  />
+         <SaleList />
       </TabPanel>
   )
 }

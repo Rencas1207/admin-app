@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { isValidObjectId } from 'mongoose';
-import validateObjectId from '../helpers/validateObjectId';
 
 const PAYMENT_METHOD_TYPES = [
   'Sin utilización Sist. Financiero',
@@ -35,7 +34,7 @@ export const saleSchema = z.object({
   total_amount: z.number(),
   products: z.array(saleProductSchema),
   payment_methods: z.array(salePaymentMethodsSchema),
-  client: z.custom(validateObjectId),
+  client: z.custom(isValidObjectId),
 });
 
 export const SaleCreationSchema = z.object({

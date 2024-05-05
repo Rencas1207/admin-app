@@ -5,7 +5,7 @@ export const getAll = async (req: any, res: Response) => {
   const { searchText } = req.query;
   const filter = !searchText ? {} : { name: new RegExp(searchText, 'i') };
   const products = await ProductModel.find(filter);
-  console.log(products, searchText);
+  // console.log(products, searchText);
   res.status(200).json({ ok: true, data: products });
 };
 
