@@ -12,6 +12,7 @@ import MyAdderButton from '../ui/buttons/MyAdderButton';
 import SaleFormButtons from './SaleFormButtons';
 import MyModal from '../ui/modals/MyModal';
 import ProductSearcher from '../products/ProductSearcher';
+import getDateForInput from 'helpers/getDateForInput';
 
 const SaleForm = ({ saleId }: SaleFormProps) => {
    const router = useRouter();
@@ -43,7 +44,7 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
    const setDefaultValues = async () => {
       if(!saleId) {    
          return { 
-            operation_date: new Date(),
+            operation_date: getDateForInput(),
             // payment_methods: [defaultPM],
             // products: [defaultProduct]
          }

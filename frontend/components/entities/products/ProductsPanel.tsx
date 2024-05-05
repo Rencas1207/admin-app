@@ -4,7 +4,7 @@ import ProductsList from './ProductsList'
 const ProductsPanel = () => {
    return (
       <TabPanel>
-         <ProductsList />
+         <ProductsList onClick={() => console.log('click')} />
       </TabPanel>
   )
 }

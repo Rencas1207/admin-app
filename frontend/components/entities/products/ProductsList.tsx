@@ -1,14 +1,16 @@
-import { Card, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ProductFromDB } from "schemas/ProductSchema";
 import { env } from "~/env";
+import ProductItem from "./ProductItem";
 
 interface Props {
    searchText?: string | undefined
    onClick: (product: ProductFromDB) => void
+   selectedProducts?: ProductFromDB[]
 }
-const ProductsList = ({searchText, onClick}: Props) => {
+const ProductsList = ({searchText, onClick, selectedProducts}: Props) => {
    const PARAMS = !!searchText ? `?searchText=${searchText}` : ''
 
   const {data: products, isLoading} = useQuery<ProductFromDB[]>({
@@ -27,19 +29,11 @@ const ProductsList = ({searchText, onClick}: Props) => {
   return (
      <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={4}>
          {products.map(p => (
-               <Card
-                  key={p._id} 
-                  px={3}
-                  py={4} 
-                  cursor="pointer" 
-                  _hover={{ bg: "gray.200", color: "#222", transition: "0.2s background-color ease-out, 0.2s color ease-out" }}
-                  onClick={() => onClick(p)}
-                  flexDir={"row"}
-                  justifyContent={"space-between"}
-               >
-                  <Text>{p.name}</Text>
-                  <Text>$ {p.supplier_cost || 0}</Text>
-               </Card>
+               <ProductItem 
+                  product={p}
+                  onClick={onClick}
+                  selected={selectedProducts?.includes(p)}
+               />
             ))
          }
       </Flex>
