@@ -12,7 +12,6 @@ const ClientItem = ({client, onClick, selected}: Props) => {
    const noSales = client.sales?.count === 0 || !client.sales?.count
    const s = client.sales?.count === 1 ? "" : "s"
    const toast = useToast()
-   console.log({ client })
    return (
       <Card
          key={client._id} 
