@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import axios from 'axios'
-import { useFormContext, useWatch } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 import { Flex, Text, useToast } from '@chakra-ui/react'
 import { env } from '~/env'
 import MyInput from '../ui/inputs/MyInput'
@@ -13,25 +13,24 @@ interface Props {
 
 function ProductAdder({fieldName}: Props) {
    const toast = useToast();
-   const { getValues, setValue, watch } = useFormContext();
+   const { setValue, watch } = useFormContext();
    const products = watch("products");
    // const productsState = useWatch({
    //    name: fieldName
    // })
 
-   
-   if(!products || products.length === 0) {
-      return <Text mb={6}>No se ha agregado ningún producto.</Text>
-   }
-
    useEffect(() => {
       // const currentProducts = getValues(fieldName);
-      if(products.length > 0) {
+      if(products?.length > 0) {
          let amount = products.reduce((prev: any, curr: any) => prev + curr.qty * curr.unit_price, 0)
          // setTotalAmount(amount)
          setValue(`payment_methods.0.amount`, amount);
       }
    }, [products])
+
+    if(!products || products.length === 0) {
+      return <Text mb={6}>No se ha agregado ningún producto.</Text>
+   }
 
 
    return (
