@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form"
-import { Flex } from "@chakra-ui/react"
+import { Flex, Text } from "@chakra-ui/react"
 import MyInput from "../ui/inputs/MyInput"
 import MySelect from "../ui/selects/MySelect"
 import { PAYMENT_METHOD_TYPES, PaymentMethod, Sale, TIME_UNITS } from "schemas/SaleSchema"
@@ -12,6 +12,11 @@ interface Props {
 const PaymentMethodAdder = ({fieldName}: Props) => {
    const { watch } = useFormContext();
    const paymentMethods = watch(fieldName)
+
+   if(!paymentMethods || paymentMethods.length === 0) {
+      return <Text mb={6}>No se ha agregado ningún método de pago.</Text>
+   }
+
    return (
       <Flex flexDir="column" mb="4">
          {paymentMethods.map((_: PaymentMethod, index: number) => (
@@ -21,20 +26,6 @@ const PaymentMethodAdder = ({fieldName}: Props) => {
                   label='Metódo' 
                   options={PAYMENT_METHOD_TYPES}                   
                />
-               {/* <FormControl flex={8} marginBottom={5}>
-                  <FormLabel>Método</FormLabel>
-                  <Select 
-                     placeholder='Seleccionar'
-                     {...register(`payment_methods.${index}.method`)} >
-                     {
-                        PAYMENT_METHOD_TYPES.map(method => (
-                           <option key={method} value={method}>
-                              {method}
-                           </option>
-                        ))
-                     }
-                  </Select>
-               </FormControl> */}
                <MyInput 
                   fieldName={`payment_methods.${index}.amount`} 
                   label='Valor' 
@@ -56,21 +47,6 @@ const PaymentMethodAdder = ({fieldName}: Props) => {
                   label='Periodo' 
                   options={Object.keys(TIME_UNITS.Enum)} 
                />
-               {/* <FormControl flex={8} marginBottom={5}>
-                  <FormLabel>Periodo</FormLabel>
-                  <Select 
-                     placeholder='Seleccionar' 
-                     {...register(`payment_methods.${index}.time_unit`)} 
-                  >
-                     {
-                        Object.keys(TIME_UNITS.Enum).map(unit => (
-                           <option key={unit} value={unit}>
-                              {unit}
-                           </option>
-                        ))
-                     }
-                  </Select>
-               </FormControl> */}
                <MyDeleteIcon<Sale> fieldName="payment_methods" index={index} />
             </Flex>
          ))}  

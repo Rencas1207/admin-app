@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import axios from 'axios'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { Flex, useToast } from '@chakra-ui/react'
+import { Flex, Text, useToast } from '@chakra-ui/react'
 import { env } from '~/env'
 import MyInput from '../ui/inputs/MyInput'
 import MyDeleteIcon from '../ui/icons/MyDeleteIcon'
@@ -19,6 +19,11 @@ function ProductAdder({fieldName}: Props) {
    //    name: fieldName
    // })
 
+   
+   if(!products || products.length === 0) {
+      return <Text mb={6}>No se ha agregado ningún producto.</Text>
+   }
+
    useEffect(() => {
       // const currentProducts = getValues(fieldName);
       if(products.length > 0) {
@@ -27,6 +32,7 @@ function ProductAdder({fieldName}: Props) {
          setValue(`payment_methods.0.amount`, amount);
       }
    }, [products])
+
 
    return (
       <Flex flexDir="column">

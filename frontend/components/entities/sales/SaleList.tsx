@@ -1,22 +1,35 @@
 import { useRouter } from 'next/router'
-import { Card, Flex, Text } from '@chakra-ui/react'
+import { Card, Flex, Spinner, Text } from '@chakra-ui/react'
 import { Sale } from 'schemas/SaleSchema';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { env } from '~/env';
 
-interface SaleFromDB extends Sale {
+interface SaleFromDB {
    _id: string;
    total_amount: number;
    client: string;
 }
 
-interface Props {
-   sales: SaleFromDB[]
-}
-
-const SaleList = ({sales}: Props) => {
+const SaleList = () => {
   const router = useRouter();
+
+   const {data: sales, isLoading} = useQuery<SaleFromDB[]>({
+      queryKey: ['sales'],
+      queryFn: async () => {
+         const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
+         withCredentials: true
+         })
+         return response.data.data;
+      }
+   });
+
+    if (isLoading) return <Spinner />
+    if (!sales) return <Text mb={6}>No hay ventas para mostrar.</Text>
+
   return (
     <>
-      <Flex flexDir="column" padding="1" gap={2} mt={2} maxH="40vh" overflowY="scroll">
+      <Flex flexDir="column" padding="1" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={4}>
          {
          sales
             .sort((a,b) => (b?.total_amount || 0) - (a?.total_amount || 0))
