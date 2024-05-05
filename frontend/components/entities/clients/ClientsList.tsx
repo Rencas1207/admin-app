@@ -1,12 +1,27 @@
 import { useRouter } from 'next/router'
-import { Card, Flex, Text } from '@chakra-ui/react'
-import { ClientListProps } from 'schemas/ClientSchema';
+import axios from 'axios';
+import { env } from '~/env';
+import { useQuery } from '@tanstack/react-query';
+import { Card, Flex, Spinner, Text } from '@chakra-ui/react'
+import { ClientFromDB } from 'schemas/ClientSchema';
 
-const ClientsList = ({ clients }: ClientListProps) => {
+const ClientsList = () => {
   const router = useRouter();
+  const {data: clients, isLoading} = useQuery<ClientFromDB[]>({
+      queryKey: ['clients'],
+      queryFn: async () => {
+        const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/clients`, {
+         withCredentials: true
+        })
+        return response.data.data;
+      }
+   });
+
+   if (isLoading) return <Spinner />
+   if (!clients) return <Text mb={6}>No hay clientes para mostrar.</Text>
   return (
     <>
-      <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={8}>
+      <Flex flexDir="column" gap={2} mt={2} maxH="40vh" overflowY="scroll" mb={4}>
          {
          clients
             .sort((a,b) => (b.sales?.amount || 0) - (a.sales?.amount || 0))

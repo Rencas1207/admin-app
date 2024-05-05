@@ -5,6 +5,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import AppHeader from "components/global/AppHeader";
 import SalesPanel from "components/entities/sales/SalesPanel";
 import ClientsPanel from "components/entities/clients/ClientsPanel";
+import ProductsPanel from "components/entities/products/ProductsPanel";
 
 export default function Home() {
   return (
@@ -26,9 +27,7 @@ export default function Home() {
             <TabPanels>
               <SalesPanel />
               <ClientsPanel />
-              <TabPanel>
-                <p>three!</p>
-              </TabPanel>
+              <ProductsPanel />
             </TabPanels>
           </Tabs>
         </Card>

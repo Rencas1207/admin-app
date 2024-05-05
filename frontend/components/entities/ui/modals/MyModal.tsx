@@ -4,14 +4,17 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseBu
 interface Props {
    title: string;
    children: ReactNode;
+   buttonText?: string;
+   buttonColor?: string;
+   buttonSize?: "xs" | "md";
 }
 
-const MyModal = ({title, children}: Props) => {
+const MyModal = ({title, children, buttonText, buttonSize = "md", buttonColor = "purple" }: Props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
-      <Button colorScheme='purple' onClick={onOpen}>
-         Nuevo cliente
+      <Button size={buttonSize} colorScheme={buttonColor} onClick={onOpen}>
+         {buttonText || title}
       </Button> 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

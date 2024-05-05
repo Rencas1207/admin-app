@@ -1,31 +1,15 @@
-import { useRouter } from 'next/router'
-import axios from 'axios'
-import { env } from '~/env'
-import { useQuery } from '@tanstack/react-query'
-import { Button, ButtonGroup, Spinner, TabPanel } from '@chakra-ui/react'
+import { TabPanel } from '@chakra-ui/react'
 import SaleList from './SaleList'
+import SaleForm from './SaleForm'
+import MyModal from '../ui/modals/MyModal'
 
 const SalesPanel = () => {
-   const {data: sales, isLoading} = useQuery({
-      queryKey: ['sales'],
-      queryFn: async () => {
-         const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/sales`, {
-         withCredentials: true
-         })
-         return response.data.data;
-      }
-   });
-
-   if (isLoading) return <Spinner />
-   
    return (
       <TabPanel>
-         <SaleList sales={sales} />
-         <ButtonGroup mt={8}>
-            <Button colorScheme='purple' onClick={() => {}}>
-               Nueva venta
-            </Button> 
-         </ButtonGroup>
+         <SaleList  />
+         <MyModal title="Nueva venta">
+            <SaleForm />
+         </MyModal> 
       </TabPanel>
   )
 }
