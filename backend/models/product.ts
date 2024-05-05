@@ -8,6 +8,7 @@ export const productSchema = new Schema({
   code: {
     type: String,
     required: true,
+    unique: true,
   },
   supplier_cost: {
     type: Number,
@@ -33,6 +34,8 @@ export const productSchema = new Schema({
     default: 0.15,
     required: true,
   },
+  discount: { type: Number, default: 0, required: true },
+  sold: { type: Boolean, default: false },
 });
 
 const ProductModel = model('Product', productSchema, 'products');

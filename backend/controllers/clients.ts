@@ -22,8 +22,6 @@ export const getAll = async (
       }
     : {};
 
-  console.log(filter);
-
   const clients = await ClientModel.find(filter);
   res.status(200).json({ ok: true, data: clients });
 };

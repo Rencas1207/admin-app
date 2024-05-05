@@ -4,7 +4,7 @@ import { Divider, Flex, Heading } from '@chakra-ui/react';
 import { env } from '~/env';
 import axios from 'axios';
 import { Sale, SaleFormProps, saleSchema, } from 'schemas/SaleSchema';
-import ProductAdder from './ProductAdder';
+import ProductAdder from '../products/ProductAdder';
 import PaymentMethodAdder from './PaymentMethodAdder';
 import SaleFormButtons from './SaleFormButtons';
 import ProductSearcher from '../products/ProductSearcher';
@@ -68,7 +68,7 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
             </MyModal>
          </Flex>
          <Divider mb={3} mt={2} />
-         <ProductAdder fieldName="products" />
+         <ProductAdder canRemove={!saleId} />
          <Flex alignItems="center" justifyContent={"space-between"} mt={4}>
             <Heading size="md">Forma de pago</Heading>
              <MyAdderButton fieldName='payment_methods' />
