@@ -1,19 +1,30 @@
 import { ReactNode } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, Button } from '@chakra-ui/react'
+import { Sizes } from 'schemas/UiSchemas';
 
 interface Props {
    title: string;
    children: ReactNode;
    buttonText?: string;
    buttonColor?: string;
-   buttonSize?: "xs" | "md";
+   buttonSize?: Sizes;
+   mr?: number;
+   disableButton?: boolean
 }
 
-const MyModal = ({title, children, buttonText, buttonSize = "md", buttonColor = "purple" }: Props) => {
+const MyModal = ({ 
+  title, 
+  children, 
+  buttonText, 
+  buttonSize = "md", 
+  buttonColor = "purple", 
+  disableButton,
+  mr = 0 
+}: Props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
-      <Button size={buttonSize} colorScheme={buttonColor} onClick={onOpen}>
+      <Button size={buttonSize} colorScheme={buttonColor} mr={mr} onClick={onOpen} isDisabled={disableButton}>
          {buttonText || title}
       </Button> 
       <Modal isOpen={isOpen} onClose={onClose}>
