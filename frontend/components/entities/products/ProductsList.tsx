@@ -4,11 +4,17 @@ import axios from "axios";
 import { ProductFromDB } from "schemas/ProductSchema";
 import { env } from "~/env";
 
-const ProductsList = () => {
+interface Props {
+   searchText?: string | undefined
+   onClick: (product: ProductFromDB) => void
+}
+const ProductsList = ({searchText, onClick}: Props) => {
+   const PARAMS = !!searchText ? `?searchText=${searchText}` : ''
+
   const {data: products, isLoading} = useQuery<ProductFromDB[]>({
-    queryKey: ['products'],
+    queryKey: ['products', searchText],
     queryFn: async () => {
-      const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/products`, {
+      const response = await axios.get(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/products${PARAMS}`, {
       withCredentials: true
       })
       return response.data.data;
@@ -27,7 +33,7 @@ const ProductsList = () => {
                   py={4} 
                   cursor="pointer" 
                   _hover={{ bg: "gray.200", color: "#222", transition: "0.2s background-color ease-out, 0.2s color ease-out" }}
-                  onClick={() => console.log(p._id)}
+                  onClick={() => onClick(p)}
                   flexDir={"row"}
                   justifyContent={"space-between"}
                >

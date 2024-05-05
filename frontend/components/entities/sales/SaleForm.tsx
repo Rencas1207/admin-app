@@ -11,7 +11,7 @@ import PaymentMethodAdder from './PaymentMethodAdder';
 import MyAdderButton from '../ui/buttons/MyAdderButton';
 import SaleFormButtons from './SaleFormButtons';
 import MyModal from '../ui/modals/MyModal';
-import ProductsList from '../products/ProductsList';
+import ProductSearcher from '../products/ProductSearcher';
 
 const SaleForm = ({ saleId }: SaleFormProps) => {
    const router = useRouter();
@@ -92,7 +92,7 @@ const SaleForm = ({ saleId }: SaleFormProps) => {
             <Heading size="md">Productos</Heading>
             {/* <MyAdderButton fieldName='products' /> */}
             <MyModal title='Elegir productos' buttonText='Agregar' buttonColor='blue'>
-               <ProductsList /> 
+               <ProductSearcher />
             </MyModal>
          </Flex>
          <Divider mb={3} mt={2} />
