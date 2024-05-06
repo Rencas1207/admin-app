@@ -12,7 +12,7 @@ const ClientsPanel = () => {
    const [searchText, setSearchText] = useState("")
    const [selectedClient, setSelectedClient] = useState<ClientFromDB | null>();
    return (
-      <TabPanel>
+      <TabPanel p={0}>
          <SearchForm 
             setSearchText={setSearchText}
             placeholder="Buscar cliente..." 

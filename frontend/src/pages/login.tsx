@@ -3,8 +3,8 @@ import { Container, Heading, Card } from '@chakra-ui/react'
 import axios from 'axios';
 import { env } from '~/env';
 import { useRouter } from 'next/router';
-import MyForm from 'components/entities/ui/forms/MyForm';
-import MyInput from 'components/entities/ui/inputs/MyInput';
+import MyForm from 'components/ui/forms/MyForm';
+import MyInput from 'components/ui/inputs/MyInput';
 import LoginButtons from 'components/entities/users/LoginButtons';
 import { LoginSchema, LoginType } from 'schemas/AuthSchema';
 import useAuth from 'hooks/useAuth';
