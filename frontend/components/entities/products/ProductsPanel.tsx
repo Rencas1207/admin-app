@@ -11,7 +11,7 @@ const ProductsPanel = () => {
    const [searchText, setSearchText] = useState("")
    const [selectedProduct, setSelectedProduct] = useState<ProductFromDB | null>()
    return (
-      <TabPanel>
+      <TabPanel p={0}>
          <SearchForm
             placeholder="Buscar producto..."
             setSearchText={setSearchText}
